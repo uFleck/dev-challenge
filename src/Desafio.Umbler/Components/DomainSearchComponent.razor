@@ -1,0 +1,110 @@
+@using Microsoft.AspNetCore.Components.Web
+@inherits DomainSearchCode
+
+<section id="domain-search">
+    <div class="container py-4 pb-md-5">			
+        <div id="box-result" class="row">
+            <div class="col-lg-9 col-md-8">   
+                <label class="sr-only" for="txt-search">Domínio</label>
+                <input class="form-control form-control-lg domain" id="txt-search" name="txt-search" placeholder="Digite o Domínio que deseja pesquisar" type="text" @bind="@DomainAddress">
+            </div>
+            <div class="col-lg-3 col-md-4 text-xs-right">
+                <button type="button" id="btn-search" name="name" class="btn btn-success btn-block btn-lg text-xs-center" data-loading-text="Pesquisando..." @onclick="SearchDomain">
+                    <i class="icon icon-search icon-white mr-1"></i>
+                    <span>Pesquisar...</span>
+                </button>
+            </div>
+        </div>
+
+        @if(Error) {
+            <div class="alert alert-danger mt-3" role="alert">
+                <strong>Uooopaa!</strong> Domínio inválido, pode dar uma checada?
+            </div>
+        }
+
+        <div class="container w-100 mt-5">
+            <div class="row" id="whois-results">
+                @if (DomainData != null)
+                {
+                    @if (DomainData.Ip == "N/A")
+                    {
+                        <div class="col-lg-12" style="text-align: center;">
+                            <div class="card">
+                                <div class="card-body p-3">
+                                    <h5 class="card-title">
+                                        <i class="icon icon-info-sign text-danger"></i>
+                                        <span>Domínio inválido</span>
+                                    </h5>
+                                    <p class="card-text">
+                                        <strong>Aparentemente este domínio não é válido, poderia checar? =)</strong>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    } else
+                    {
+                        <div class="col-lg-12" style="text-align: center;">
+                            <div class="card w-100 pb-4">
+                                <div class="card-header">
+                                    <h4 class="card-title">
+                                        <span>Informações do Domínio</span>
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="container w-100" style="font-size: 1.5rem;">
+                                        <div class="row-lg-12">
+                                            <div class="col-lg-6">
+                                                @if (DomainData.Name != null)
+                                                {
+                                                    <p>Name: @DomainData.Name</p>
+                                                }
+                                            </div>
+                                            <div class="col-lg-6">
+                                                @if (DomainData.Ip != null)
+                                                {
+                                                    <p>IP: @DomainData.Ip</p>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="row-lg-12">
+                                            <div class="col-lg-12">
+                                                @if (DomainData.HostedAt != null)
+                                                {
+                                                    <p>Hosted At: @DomainData.HostedAt</p>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card w-100 pb-4" @onclick="Toggle" style="cursor: pointer;">
+                                <div class="card-header">
+                                    <h4 class="card-title">
+                                        <span>Dados do WhoIs</span>
+                                    </h4>
+                                </div>
+                                @if (ShowWhois)
+                                {
+                                    <div class="card-body">
+                                        <div class="container w-100" style="font-size: 1.5rem; text-align: left;">
+                                            <span> @WhoIs </span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    
+                } else
+                {
+                    @if (IsLoading)
+                    {
+                        <div style="display: flex; justify-content: center;">
+                            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>
